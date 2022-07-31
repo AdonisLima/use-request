@@ -19,7 +19,7 @@ export function RickAndMortyDataVisualizer({
   return (
     <div>
       <h1>Rick and morty api</h1>
-      {JSON.stringify(state, null, 3)}
+      {JSON.stringify(state.data, null)}
     </div>
   );
 }
