@@ -1,5 +1,15 @@
-export interface ResponseInterface<DataType> {
-  ok: boolean;
+export type ResponseInterface<DataType> =
+  | SuccessfulResponse<DataType>
+  | FailureResponse;
+
+export interface SuccessfulResponse<DataType> {
+  ok: true;
   data: DataType;
-  error: boolean;
+  error: null;
+}
+
+export interface FailureResponse {
+  ok: false;
+  data: null;
+  error: { code: number; message: string };
 }

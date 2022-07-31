@@ -13,6 +13,10 @@ export function RickAndMortyDataVisualizer({
     return <div>loading...</div>;
   }
 
+  if (state.error) {
+    return <div>{state.error.message}</div>;
+  }
+
   return (
     <div>
       <h1>Rick and morty api</h1>

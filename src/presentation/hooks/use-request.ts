@@ -10,13 +10,7 @@ function requestReducer(state: any, action: any) {
         isLoading: true,
       };
     }
-    case "FETCH_SUCCESS":
-      return {
-        isLoading: false,
-        data: payload.data,
-        error: "",
-      };
-    case "FETCH_ERROR":
+    case "PROMISE_FULFILLED":
       return {
         isLoading: false,
         data: payload.data,
@@ -31,7 +25,7 @@ export function useRequest(execute: (arg: any) => Promise<any>) {
   const [state, dispatch] = useReducer(requestReducer, {
     data: null,
     isLoading: false,
-    error: "",
+    error: null,
   });
 
   const request = useCallback(async () => {
@@ -39,7 +33,7 @@ export function useRequest(execute: (arg: any) => Promise<any>) {
 
     const response = await execute(802);
 
-    dispatch({ type: "FETCH_SUCCESS", payload: response });
+    dispatch({ type: "PROMISE_FULFILLED", payload: response });
   }, [execute]);
 
   useEffect(() => {
