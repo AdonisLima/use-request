@@ -10,10 +10,6 @@ import { RickAndMortyDataVisualizer } from "./rick-and-morty-data-visualizer";
 class RemoteGetRickAndMortyDataMock implements GetRickAndMortyData {
   execute: (characterId: number) => Promise<ResponseInterface<CharacterModel>> =
     async characterId => {
-      // const apiResponse = await fetch(
-      //   `https://rickandmortyapi.com/api/character/${characterId}`
-      // );
-
       const response: ResponseInterface<CharacterModel> = {
         ok: true,
         data: fakeData,
