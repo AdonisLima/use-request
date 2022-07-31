@@ -1,4 +1,4 @@
-import { getByText, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 
 import { ResponseInterface } from "@/data/protocols";
 import { CharacterModel } from "@/domain";
@@ -17,15 +17,21 @@ class RemoteGetRickAndMortyDataMock implements GetRickAndMortyData {
       const response: ResponseInterface<CharacterModel> = {
         ok: true,
         data: fakeData,
-        error: false,
+        error: null,
       };
 
       return Promise.resolve(response);
     };
 }
 
-function makeSut() {
+function makeSut(mockedResolvedValue?: ResponseInterface<CharacterModel>) {
   const getRickAndMortyDataMock = new RemoteGetRickAndMortyDataMock();
+
+  if (mockedResolvedValue) {
+    jest
+      .spyOn(getRickAndMortyDataMock, "execute")
+      .mockResolvedValueOnce(mockedResolvedValue);
+  }
 
   render(
     <RickAndMortyDataVisualizer
@@ -44,6 +50,22 @@ describe("<RickAndMortyDataVisualizer />", () => {
 
     await waitFor(() => {
       expect(loadingComponent).toBeInTheDocument();
+    });
+  });
+
+  test("Should render an error state", async () => {
+    const errorMessage = "UnexpectedError";
+
+    makeSut({
+      ok: false,
+      data: null,
+      error: { code: 1, message: errorMessage },
+    });
+
+    const errorComponent = await screen.findByText(errorMessage);
+
+    await waitFor(() => {
+      expect(errorComponent).toBeInTheDocument();
     });
   });
 
