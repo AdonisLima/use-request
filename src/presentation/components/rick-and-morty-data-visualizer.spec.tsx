@@ -37,6 +37,16 @@ function makeSut() {
 }
 
 describe("<RickAndMortyDataVisualizer />", () => {
+  test("Should render loading state", async () => {
+    makeSut();
+
+    const loadingComponent = await screen.findByText("loading...");
+
+    await waitFor(() => {
+      expect(loadingComponent).toBeInTheDocument();
+    });
+  });
+
   test("should render proper data", async () => {
     makeSut();
 
