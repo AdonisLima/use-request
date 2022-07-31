@@ -4,7 +4,7 @@ function requestReducer(state: any, action: any) {
   const { type, payload } = action;
 
   switch (type) {
-    case "LOADING": {
+    case "PROMISE_PENDING": {
       return {
         ...state,
         isLoading: true,
@@ -29,7 +29,7 @@ export function useRequest(execute: (arg: any) => Promise<any>) {
   });
 
   const request = useCallback(async () => {
-    dispatch({ type: "LOADING" });
+    dispatch({ type: "PROMISE_PENDING" });
 
     const response = await execute(802);
 
