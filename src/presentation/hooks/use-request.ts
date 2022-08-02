@@ -21,7 +21,9 @@ function requestReducer(state: any, action: any) {
   }
 }
 
-export function useRequest(execute: (arg: any) => Promise<any>) {
+export function useRequest(execute: (arg: any) => Promise<any>, options: any) {
+  const { initialPayload } = options;
+
   const [state, dispatch] = useReducer(requestReducer, {
     data: null,
     isLoading: false,
@@ -31,10 +33,10 @@ export function useRequest(execute: (arg: any) => Promise<any>) {
   const request = useCallback(async () => {
     dispatch({ type: "PROMISE_PENDING" });
 
-    const response = await execute(802);
+    const response = await execute(initialPayload);
 
     dispatch({ type: "PROMISE_FULFILLED", payload: response });
-  }, [execute]);
+  }, [execute, initialPayload]);
 
   useEffect(() => {
     request();

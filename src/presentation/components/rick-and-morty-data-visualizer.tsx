@@ -7,7 +7,9 @@ export function RickAndMortyDataVisualizer({
 }: {
   getRickAndMortyData: GetRickAndMortyData;
 }) {
-  const { state } = useRequest(getRickAndMortyData.execute);
+  const { state } = useRequest(getRickAndMortyData.execute, {
+    initialPayload: 802,
+  });
 
   if (state.isLoading) {
     return <div>loading...</div>;
