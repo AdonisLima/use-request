@@ -4,14 +4,16 @@ import {
   ActionInterface,
   ActionTypesEnum,
   GenericUsecase,
+  GenericUsecaseDataReturn,
+  GenericUsecasePayloadType,
   OptionsInterface,
   StateInterface,
 } from "./types";
 
-function requestReducer(
-  state: StateInterface,
+function requestReducer<ResponseDataType>(
+  state: StateInterface<ResponseDataType>,
   action: ActionInterface
-): StateInterface {
+): StateInterface<ResponseDataType> {
   switch (action.type) {
     case ActionTypesEnum.PROMISE_PENDING: {
       return {
@@ -33,10 +35,13 @@ function requestReducer(
 
 export function useRequest<UseCaseType extends GenericUsecase>(
   usecase: UseCaseType,
-  options?: OptionsInterface<Parameters<UseCaseType["execute"]>[0]>
+  options?: OptionsInterface<GenericUsecasePayloadType<UseCaseType>>
 ) {
   const [state, dispatch] = useReducer<
-    (state: StateInterface, action: ActionInterface) => StateInterface
+    (
+      state: StateInterface<GenericUsecaseDataReturn<UseCaseType>["data"]>,
+      action: ActionInterface
+    ) => StateInterface<GenericUsecaseDataReturn<UseCaseType>["data"]>
   >(requestReducer, {
     ok: false,
     data: null,
