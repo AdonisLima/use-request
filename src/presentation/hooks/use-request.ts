@@ -1,42 +1,58 @@
 import { useCallback, useEffect, useReducer } from "react";
 
-function requestReducer(state: any, action: any) {
-  const { type, payload } = action;
+import {
+  ActionInterface,
+  ActionTypesEnum,
+  GenericUsecase,
+  OptionsInterface,
+  StateInterface,
+} from "./types";
 
-  switch (type) {
-    case "PROMISE_PENDING": {
+function requestReducer(
+  state: StateInterface,
+  action: ActionInterface
+): StateInterface {
+  switch (action.type) {
+    case ActionTypesEnum.PROMISE_PENDING: {
       return {
         ...state,
         isLoading: true,
       };
     }
-    case "PROMISE_FULFILLED":
+    case ActionTypesEnum.PROMISE_FULFILLED:
       return {
+        ok: action.payload.ok,
         isLoading: false,
-        data: payload.data,
-        error: payload.error,
+        data: action.payload.data,
+        error: action.payload.error,
       };
     default:
       return state;
   }
 }
 
-export function useRequest(execute: (arg: any) => Promise<any>, options: any) {
+export function useRequest<UseCaseType extends GenericUsecase>(
+  usecase: UseCaseType,
+  options: OptionsInterface<Parameters<UseCaseType["execute"]>[0]>
+) {
   const { initialPayload } = options;
 
-  const [state, dispatch] = useReducer(requestReducer, {
+  const [state, dispatch] = useReducer<
+    (state: StateInterface, action: ActionInterface) => StateInterface
+  >(requestReducer, {
+    ok: false,
     data: null,
     isLoading: false,
     error: null,
   });
 
   const request = useCallback(async () => {
-    dispatch({ type: "PROMISE_PENDING" });
+    dispatch({ type: ActionTypesEnum.PROMISE_PENDING });
 
-    const response = await execute(initialPayload);
+    const response = await usecase.execute(initialPayload);
 
-    dispatch({ type: "PROMISE_FULFILLED", payload: response });
-  }, [execute, initialPayload]);
+    dispatch({ type: ActionTypesEnum.PROMISE_FULFILLED, payload: response });
+  }, [usecase, initialPayload]);
 
   useEffect(() => {
     request();

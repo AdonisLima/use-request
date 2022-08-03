@@ -7,7 +7,7 @@ export function RickAndMortyDataVisualizer({
 }: {
   getRickAndMortyData: GetRickAndMortyData;
 }) {
-  const { state } = useRequest(getRickAndMortyData.execute, {
+  const { state } = useRequest<GetRickAndMortyData>(getRickAndMortyData, {
     initialPayload: 802,
   });
 

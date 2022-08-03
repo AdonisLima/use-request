@@ -11,5 +11,10 @@ export interface SuccessfulResponse<DataType> {
 export interface FailureResponse {
   ok: false;
   data: null;
-  error: { code: number; message: string };
+  error: ErrorInterface;
+}
+
+export interface ErrorInterface {
+  code: number;
+  message: string;
 }
