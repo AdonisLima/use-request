@@ -33,5 +33,5 @@ export interface GenericUsecase {
 }
 
 export interface OptionsInterface<InitialUsecasePayloadType> {
-  initialPayload: InitialUsecasePayloadType;
+  initialPayload?: InitialUsecasePayloadType;
 }

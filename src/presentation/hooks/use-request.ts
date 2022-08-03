@@ -33,10 +33,8 @@ function requestReducer(
 
 export function useRequest<UseCaseType extends GenericUsecase>(
   usecase: UseCaseType,
-  options: OptionsInterface<Parameters<UseCaseType["execute"]>[0]>
+  options?: OptionsInterface<Parameters<UseCaseType["execute"]>[0]>
 ) {
-  const { initialPayload } = options;
-
   const [state, dispatch] = useReducer<
     (state: StateInterface, action: ActionInterface) => StateInterface
   >(requestReducer, {
@@ -49,10 +47,19 @@ export function useRequest<UseCaseType extends GenericUsecase>(
   const request = useCallback(async () => {
     dispatch({ type: ActionTypesEnum.PROMISE_PENDING });
 
-    const response = await usecase.execute(initialPayload);
+    let response;
+    if (options?.initialPayload) {
+      response = await usecase.execute(options?.initialPayload);
+
+      dispatch({ type: ActionTypesEnum.PROMISE_FULFILLED, payload: response });
+
+      return;
+    }
+
+    response = await usecase.execute();
 
     dispatch({ type: ActionTypesEnum.PROMISE_FULFILLED, payload: response });
-  }, [usecase, initialPayload]);
+  }, [options?.initialPayload, usecase]);
 
   useEffect(() => {
     request();
