@@ -1,4 +1,5 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { ResponseInterface } from "@/data/protocols";
 import { CharacterModel } from "@/domain";
@@ -7,9 +8,13 @@ import { fakeData } from "@/tests";
 
 import { RickAndMortyDataVisualizer } from "./rick-and-morty-data-visualizer";
 
-class RemoteGetRickAndMortyDataMock implements GetRickAndMortyData {
+class RemoteGetRickAndMortyDataSpy implements GetRickAndMortyData {
+  characterId!: number;
+
   execute: (characterId: number) => Promise<ResponseInterface<CharacterModel>> =
     async characterId => {
+      this.characterId = characterId;
+
       const response: ResponseInterface<CharacterModel> = {
         ok: true,
         data: fakeData,
@@ -20,22 +25,19 @@ class RemoteGetRickAndMortyDataMock implements GetRickAndMortyData {
     };
 }
 
-function makeSut(mockedResolvedValue?: ResponseInterface<CharacterModel>) {
-  const getRickAndMortyDataMock = new RemoteGetRickAndMortyDataMock();
+function makeSut(customGetRickAndMortyDataSpy?: RemoteGetRickAndMortyDataSpy) {
+  const getRickAndMortyDataSpy =
+    customGetRickAndMortyDataSpy || new RemoteGetRickAndMortyDataSpy();
 
-  if (mockedResolvedValue) {
-    jest
-      .spyOn(getRickAndMortyDataMock, "execute")
-      .mockResolvedValueOnce(mockedResolvedValue);
-  }
+  const user = userEvent.setup();
 
   render(
     <RickAndMortyDataVisualizer
-      getRickAndMortyData={getRickAndMortyDataMock}
+      getRickAndMortyData={getRickAndMortyDataSpy}
     ></RickAndMortyDataVisualizer>
   );
 
-  return { getRickAndMortyDataMock };
+  return { getRickAndMortyDataSpy, user };
 }
 
 describe("<RickAndMortyDataVisualizer />", () => {
@@ -52,21 +54,32 @@ describe("<RickAndMortyDataVisualizer />", () => {
   test("Should render an error state", async () => {
     const errorMessage = "UnexpectedError";
 
-    makeSut({
-      ok: false,
-      data: null,
-      error: { code: 1, message: errorMessage },
-    });
+    const getRickAndMortyDataSpy = new RemoteGetRickAndMortyDataSpy();
+
+    const executeSpy = jest
+      .spyOn(getRickAndMortyDataSpy, "execute")
+      .mockResolvedValueOnce({
+        ok: false,
+        data: null,
+        error: { code: 1, message: errorMessage },
+      });
+
+    makeSut(getRickAndMortyDataSpy);
 
     const errorComponent = await screen.findByText(errorMessage);
 
     await waitFor(() => {
       expect(errorComponent).toBeInTheDocument();
     });
+    expect(executeSpy).toHaveBeenCalledTimes(1);
   });
 
   test("should render proper data", async () => {
-    makeSut();
+    const getRickAndMortyDataSpy = new RemoteGetRickAndMortyDataSpy();
+
+    const executeSpy = jest.spyOn(getRickAndMortyDataSpy, "execute");
+
+    makeSut(getRickAndMortyDataSpy);
 
     const stringifiedFakeData = JSON.stringify(fakeData, null);
 
@@ -75,5 +88,18 @@ describe("<RickAndMortyDataVisualizer />", () => {
     await waitFor(() => {
       expect(dataVisualizer).toBeInTheDocument();
     });
+    expect(executeSpy).toHaveBeenCalledTimes(1);
   });
 });
+
+/**
+ * Requirements:
+ * should work with any http method
+ *
+ */
+
+//Todo:
+// Allow to retry request
+// Make first request optional
+// Allow to programmatically request
+// Allow to extend success and failure, (state reducer maybe?)
