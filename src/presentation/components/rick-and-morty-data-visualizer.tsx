@@ -7,9 +7,12 @@ export function RickAndMortyDataVisualizer({
 }: {
   getRickAndMortyData: GetRickAndMortyData;
 }) {
-  const { state } = useRequest<GetRickAndMortyData>(getRickAndMortyData, {
-    initialPayload: 802,
-  });
+  const { state, request } = useRequest<GetRickAndMortyData>(
+    getRickAndMortyData,
+    {
+      initialPayload: 802,
+    }
+  );
 
   if (state.isLoading) {
     return <div>loading...</div>;
@@ -22,7 +25,14 @@ export function RickAndMortyDataVisualizer({
   return (
     <div>
       <h1>Rick and morty api</h1>
-      {JSON.stringify(state.data, null)}
+      <div>{JSON.stringify(state.data, null)}</div>
+      <button
+        onClick={() => {
+          request(802);
+        }}
+      >
+        request
+      </button>
     </div>
   );
 }

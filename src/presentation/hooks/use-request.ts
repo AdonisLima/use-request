@@ -49,28 +49,41 @@ export function useRequest<UseCaseType extends GenericUsecase>(
     error: null,
   });
 
-  const request = useCallback(async () => {
-    dispatch({ type: ActionTypesEnum.PROMISE_PENDING });
+  const request = useCallback(
+    async (payload: GenericUsecasePayloadType<UseCaseType> | void) => {
+      dispatch({ type: ActionTypesEnum.PROMISE_PENDING });
 
-    let response;
-    if (options?.initialPayload) {
-      response = await usecase.execute(options?.initialPayload);
+      let response;
+
+      if (payload) {
+        response = await usecase.execute(payload);
+
+        dispatch({
+          type: ActionTypesEnum.PROMISE_FULFILLED,
+          payload: response,
+        });
+
+        return;
+      }
+
+      response = await usecase.execute();
 
       dispatch({ type: ActionTypesEnum.PROMISE_FULFILLED, payload: response });
+    },
+    [usecase]
+  );
 
+  useEffect(() => {
+    if (options?.initialPayload) {
+      request(options?.initialPayload);
       return;
     }
 
-    response = await usecase.execute();
-
-    dispatch({ type: ActionTypesEnum.PROMISE_FULFILLED, payload: response });
-  }, [options?.initialPayload, usecase]);
-
-  useEffect(() => {
     request();
-  }, [request]);
+  }, [options?.initialPayload, request]);
 
   return {
     state,
+    request,
   };
 }
