@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { ResponseInterface } from "@/data/protocols";
@@ -89,6 +89,24 @@ describe("<RickAndMortyDataVisualizer />", () => {
       expect(dataVisualizer).toBeInTheDocument();
     });
     expect(executeSpy).toHaveBeenCalledTimes(1);
+  });
+
+  test("should retry request", async () => {
+    const getRickAndMortyDataSpy = new RemoteGetRickAndMortyDataSpy();
+
+    const executeSpy = jest.spyOn(getRickAndMortyDataSpy, "execute");
+
+    const { user } = makeSut(getRickAndMortyDataSpy);
+
+    const requestButton = await screen.findByRole("button", {
+      name: /request/i,
+    });
+
+    await user.click(requestButton);
+
+    await waitFor(() => {
+      expect(executeSpy).toHaveBeenCalledTimes(2);
+    });
   });
 });
 
