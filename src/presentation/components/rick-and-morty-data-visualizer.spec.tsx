@@ -115,7 +115,7 @@ describe("<RickAndMortyDataVisualizer />", () => {
     expect(executeSpy).toHaveBeenCalledTimes(1);
   });
 
-  test("Should retry request", async () => {
+  test("Should ba able to retry request programmatically", async () => {
     const getRickAndMortyDataSpy = new RemoteGetRickAndMortyDataSpy();
 
     const executeSpy = jest.spyOn(getRickAndMortyDataSpy, "execute");
