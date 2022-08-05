@@ -37,6 +37,8 @@ export function useRequest<UseCaseType extends GenericUsecase>(
   usecase: UseCaseType,
   options?: OptionsInterface<GenericUsecasePayloadType<UseCaseType>>
 ) {
+  const { shouldRequestOnLoad = true, initialPayload } = options || {};
+
   const [state, dispatch] = useReducer<
     (
       state: StateInterface<GenericUsecaseDataReturn<UseCaseType>["data"]>,
@@ -74,13 +76,17 @@ export function useRequest<UseCaseType extends GenericUsecase>(
   );
 
   useEffect(() => {
-    if (options?.initialPayload) {
-      request(options?.initialPayload);
+    if (!shouldRequestOnLoad) {
+      return;
+    }
+
+    if (initialPayload) {
+      request(initialPayload);
       return;
     }
 
     request();
-  }, [options?.initialPayload, request]);
+  }, [initialPayload, request, shouldRequestOnLoad]);
 
   return {
     state,
