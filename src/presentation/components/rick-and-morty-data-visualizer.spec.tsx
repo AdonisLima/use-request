@@ -4,7 +4,8 @@ import userEvent from "@testing-library/user-event";
 import { ResponseInterface } from "@/data/protocols";
 import { CharacterModel } from "@/domain";
 import { GetRickAndMortyData } from "@/domain/usecases";
-import { fakeData } from "@/tests";
+import { GetListOfRicks } from "@/domain/usecases/get-list-of-ricks";
+import { fakeData, listOfFakeRicks } from "@/tests";
 
 import { RickAndMortyDataVisualizer } from "./rick-and-morty-data-visualizer";
 
@@ -25,15 +26,38 @@ class RemoteGetRickAndMortyDataSpy implements GetRickAndMortyData {
     };
 }
 
-function makeSut(customGetRickAndMortyDataSpy?: RemoteGetRickAndMortyDataSpy) {
-  const getRickAndMortyDataSpy =
-    customGetRickAndMortyDataSpy || new RemoteGetRickAndMortyDataSpy();
+class RemoteGetListOfRicks implements GetListOfRicks {
+  execute: () => Promise<ResponseInterface<CharacterModel[]>> = async () => {
+    const response: ResponseInterface<CharacterModel[]> = {
+      ok: true,
+      data: listOfFakeRicks,
+      error: null,
+    };
+
+    return Promise.resolve(response);
+  };
+}
+
+interface SutInterface {
+  getRickAndMortyDataSpy?: RemoteGetRickAndMortyDataSpy;
+  getListsOfRicksSpy?: GetListOfRicks;
+}
+
+function makeSut(params?: SutInterface) {
+  const { getRickAndMortyDataSpy, getListsOfRicksSpy } = params || {};
+
+  const parsedGetRickAndMortyDataSpy =
+    getRickAndMortyDataSpy || new RemoteGetRickAndMortyDataSpy();
+
+  const parsedGetListOfRicksSpy =
+    getListsOfRicksSpy || new RemoteGetListOfRicks();
 
   const user = userEvent.setup();
 
   render(
     <RickAndMortyDataVisualizer
-      getRickAndMortyData={getRickAndMortyDataSpy}
+      getRickAndMortyData={parsedGetRickAndMortyDataSpy}
+      getListOfRicks={parsedGetListOfRicksSpy}
     ></RickAndMortyDataVisualizer>
   );
 
@@ -64,7 +88,7 @@ describe("<RickAndMortyDataVisualizer />", () => {
         error: { code: 1, message: errorMessage },
       });
 
-    makeSut(getRickAndMortyDataSpy);
+    makeSut({ getRickAndMortyDataSpy });
 
     const errorComponent = await screen.findByText(errorMessage);
 
@@ -74,12 +98,12 @@ describe("<RickAndMortyDataVisualizer />", () => {
     expect(executeSpy).toHaveBeenCalledTimes(1);
   });
 
-  test("should render proper data", async () => {
+  test("Should render proper data", async () => {
     const getRickAndMortyDataSpy = new RemoteGetRickAndMortyDataSpy();
 
     const executeSpy = jest.spyOn(getRickAndMortyDataSpy, "execute");
 
-    makeSut(getRickAndMortyDataSpy);
+    makeSut({ getRickAndMortyDataSpy });
 
     const stringifiedFakeData = JSON.stringify(fakeData, null);
 
@@ -91,12 +115,14 @@ describe("<RickAndMortyDataVisualizer />", () => {
     expect(executeSpy).toHaveBeenCalledTimes(1);
   });
 
-  test("should retry request", async () => {
+  test("Should retry request", async () => {
     const getRickAndMortyDataSpy = new RemoteGetRickAndMortyDataSpy();
 
     const executeSpy = jest.spyOn(getRickAndMortyDataSpy, "execute");
 
-    const { user } = makeSut(getRickAndMortyDataSpy);
+    const { user } = makeSut({
+      getRickAndMortyDataSpy: getRickAndMortyDataSpy,
+    });
 
     const requestButton = await screen.findByRole("button", {
       name: /request/i,
@@ -108,16 +134,30 @@ describe("<RickAndMortyDataVisualizer />", () => {
       expect(executeSpy).toHaveBeenCalledTimes(2);
     });
   });
+
+  test("Should allow request on page load to be optional", async () => {
+    const listOfRicksSpy = new RemoteGetListOfRicks();
+
+    const optionalExecuteSpy = jest.spyOn(listOfRicksSpy, "execute");
+
+    makeSut({});
+
+    const getAreaForListOfRicks = await screen.findByTestId(
+      "area-for-ricks-list"
+    );
+
+    await waitFor(() => {
+      expect(getAreaForListOfRicks).toHaveTextContent("null");
+    });
+    expect(optionalExecuteSpy).toHaveBeenCalledTimes(0);
+  });
 });
 
 /**
  * Requirements:
  * should work with any http method
- *
  */
 
 //Todo:
-// Allow to retry request
 // Make first request optional
-// Allow to programmatically request
 // Allow to extend success and failure, (state reducer maybe?)

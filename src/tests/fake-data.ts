@@ -18,3 +18,83 @@ export const fakeData = {
   url: "https://rickandmortyapi.com/api/character/802",
   created: "2021-11-02T13:12:42.408Z",
 };
+
+export const listOfFakeRicks = [
+  {
+    id: 802,
+    name: "26 Years Old Morty",
+    status: "Dead",
+    species: "Human",
+    type: "",
+    gender: "Male",
+    origin: {
+      name: "Citadel of Ricks",
+      url: "https://rickandmortyapi.com/api/location/3",
+    },
+    location: {
+      name: "Citadel of Ricks",
+      url: "https://rickandmortyapi.com/api/location/3",
+    },
+    image: "https://rickandmortyapi.com/api/character/avatar/802.jpeg",
+    episode: ["https://rickandmortyapi.com/api/episode/51"],
+    url: "https://rickandmortyapi.com/api/character/802",
+    created: "2021-11-02T13:12:42.408Z",
+  },
+  {
+    id: 803,
+    name: "40 Years Old Morty",
+    status: "unknown",
+    species: "Human",
+    type: "",
+    gender: "Male",
+    origin: {
+      name: "Citadel of Ricks",
+      url: "https://rickandmortyapi.com/api/location/3",
+    },
+    location: {
+      name: "Citadel of Ricks",
+      url: "https://rickandmortyapi.com/api/location/3",
+    },
+    image: "https://rickandmortyapi.com/api/character/avatar/803.jpeg",
+    episode: ["https://rickandmortyapi.com/api/episode/51"],
+    url: "https://rickandmortyapi.com/api/character/803",
+    created: "2021-11-02T13:13:51.515Z",
+  },
+  {
+    id: 804,
+    name: "Andy",
+    status: "unknown",
+    species: "Human",
+    type: "Mascot",
+    gender: "Male",
+    origin: { name: "unknown", url: "" },
+    location: {
+      name: "Citadel of Ricks",
+      url: "https://rickandmortyapi.com/api/location/3",
+    },
+    image: "https://rickandmortyapi.com/api/character/avatar/804.jpeg",
+    episode: ["https://rickandmortyapi.com/api/episode/51"],
+    url: "https://rickandmortyapi.com/api/character/804",
+    created: "2021-11-02T13:19:19.807Z",
+  },
+  {
+    id: 805,
+    name: "Baby Mouse Skin Morty",
+    status: "Alive",
+    species: "Human",
+    type: "",
+    gender: "Male",
+    origin: {
+      name: "Citadel of Ricks",
+      url: "https://rickandmortyapi.com/api/location/3",
+    },
+    location: {
+      name: "Citadel of Ricks",
+      url: "https://rickandmortyapi.com/api/location/3",
+    },
+    image: "https://rickandmortyapi.com/api/character/avatar/805.jpeg",
+    episode: ["https://rickandmortyapi.com/api/episode/51"],
+    url: "https://rickandmortyapi.com/api/character/805",
+    created: "2021-11-02T13:31:17.973Z",
+  },
+];
