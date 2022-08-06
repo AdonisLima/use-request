@@ -37,7 +37,11 @@ export function useRequest<UseCaseType extends GenericUsecase>(
   usecase: UseCaseType,
   options?: OptionsInterface<GenericUsecasePayloadType<UseCaseType>>
 ) {
-  const { shouldRequestOnLoad = true, initialPayload } = options || {};
+  const {
+    shouldRequestOnLoad = true,
+    initialPayload,
+    onSuccess,
+  } = options || {};
 
   const [state, dispatch] = useReducer<
     (
@@ -59,20 +63,19 @@ export function useRequest<UseCaseType extends GenericUsecase>(
 
       if (payload) {
         response = await usecase.execute(payload);
+      } else {
+        response = await usecase.execute();
+      }
 
-        dispatch({
-          type: ActionTypesEnum.PROMISE_FULFILLED,
-          payload: response,
-        });
+      dispatch({ type: ActionTypesEnum.PROMISE_FULFILLED, payload: response });
+
+      if (response.ok && onSuccess) {
+        onSuccess();
 
         return;
       }
-
-      response = await usecase.execute();
-
-      dispatch({ type: ActionTypesEnum.PROMISE_FULFILLED, payload: response });
     },
-    [usecase]
+    [onSuccess, usecase]
   );
 
   useEffect(() => {

@@ -1,6 +1,8 @@
 /* eslint-disable simple-import-sort/imports */
 import { GetRickAndMortyData } from "@/domain/usecases";
 import { GetListOfRicks } from "@/domain/usecases/get-list-of-ricks";
+import { useCallback } from "react";
+import { toast } from "react-toastify";
 
 import { useRequest } from "../hooks";
 
@@ -14,6 +16,17 @@ export function RickAndMortyDataVisualizer({
     getRickAndMortyData,
     {
       initialPayload: 805,
+      onSuccess: useCallback(() => {
+        toast("Dados obtidos com sucesso!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }, []),
     }
   );
 
