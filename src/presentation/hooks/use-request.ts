@@ -41,6 +41,7 @@ export function useRequest<UseCaseType extends GenericUsecase>(
     shouldRequestOnLoad = true,
     initialPayload,
     onSuccess,
+    onFailure,
   } = options || {};
 
   const [state, dispatch] = useReducer<
@@ -74,8 +75,14 @@ export function useRequest<UseCaseType extends GenericUsecase>(
 
         return;
       }
+
+      if (!response.ok && onFailure) {
+        onFailure(response.error);
+
+        return;
+      }
     },
-    [onSuccess, usecase]
+    [onFailure, onSuccess, usecase]
   );
 
   useEffect(() => {

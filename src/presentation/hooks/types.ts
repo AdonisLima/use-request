@@ -1,4 +1,8 @@
-import { ErrorInterface, ResponseInterface } from "@/data/protocols";
+import {
+  ErrorInterface,
+  FailureResponse,
+  ResponseInterface,
+} from "@/data/protocols";
 
 export interface StateInterface<UsecaseReturnType> {
   ok: boolean;
@@ -42,4 +46,5 @@ export interface OptionsInterface<InitialUsecasePayloadType> {
   initialPayload?: InitialUsecasePayloadType;
   shouldRequestOnLoad?: boolean;
   onSuccess?: () => void;
+  onFailure?: (error: ErrorInterface) => void;
 }

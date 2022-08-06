@@ -1,4 +1,5 @@
 /* eslint-disable simple-import-sort/imports */
+import { ErrorInterface } from "@/data/protocols";
 import { GetRickAndMortyData } from "@/domain/usecases";
 import { GetListOfRicks } from "@/domain/usecases/get-list-of-ricks";
 import { useCallback } from "react";
@@ -18,6 +19,17 @@ export function RickAndMortyDataVisualizer({
       initialPayload: 805,
       onSuccess: useCallback(() => {
         toast("Dados obtidos com sucesso!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }, []),
+      onFailure: useCallback((error: ErrorInterface) => {
+        toast(error.message, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
