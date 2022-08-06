@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { ToastContainer } from "react-toastify";
 
 import { ResponseInterface } from "@/data/protocols";
 import { CharacterModel } from "@/domain";
@@ -55,10 +56,13 @@ function makeSut(params?: SutInterface) {
   const user = userEvent.setup();
 
   render(
-    <RickAndMortyDataVisualizer
-      getRickAndMortyData={parsedGetRickAndMortyDataSpy}
-      getListOfRicks={parsedGetListOfRicksSpy}
-    ></RickAndMortyDataVisualizer>
+    <>
+      <ToastContainer />
+      <RickAndMortyDataVisualizer
+        getRickAndMortyData={parsedGetRickAndMortyDataSpy}
+        getListOfRicks={parsedGetListOfRicksSpy}
+      ></RickAndMortyDataVisualizer>
+    </>
   );
 
   return { getRickAndMortyDataSpy, user };
@@ -140,7 +144,7 @@ describe("<RickAndMortyDataVisualizer />", () => {
 
     const optionalExecuteSpy = jest.spyOn(listOfRicksSpy, "execute");
 
-    makeSut({});
+    makeSut({ getListsOfRicksSpy: listOfRicksSpy });
 
     const getAreaForListOfRicks = await screen.findByTestId(
       "area-for-ricks-list"
@@ -150,6 +154,20 @@ describe("<RickAndMortyDataVisualizer />", () => {
       expect(getAreaForListOfRicks).toHaveTextContent("null");
     });
     expect(optionalExecuteSpy).toHaveBeenCalledTimes(0);
+  });
+
+  test("Should allow to execute custom behavior on successful request", async () => {
+    const { user } = makeSut();
+
+    const requestButton = await screen.findByRole("button", {
+      name: /request/i,
+    });
+
+    await user.click(requestButton);
+
+    const toast = await screen.findByRole("alert");
+
+    expect(toast).toHaveTextContent("Dados obtidos com sucesso!");
   });
 });
 
