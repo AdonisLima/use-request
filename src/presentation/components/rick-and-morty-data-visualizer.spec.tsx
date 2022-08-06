@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { wait } from "@testing-library/user-event/dist/types/utils";
 import { ToastContainer } from "react-toastify";
 
 import { ResponseInterface } from "@/data/protocols";
@@ -168,6 +169,26 @@ describe("<RickAndMortyDataVisualizer />", () => {
     const toast = await screen.findByRole("alert");
 
     expect(toast).toHaveTextContent("Dados obtidos com sucesso!");
+  });
+
+  test("Should allow to execute custom behavior on failed request", async () => {
+    const getRickAndMortyDataSpy = new RemoteGetRickAndMortyDataSpy();
+
+    const errorMessage = "Any error message";
+
+    jest.spyOn(getRickAndMortyDataSpy, "execute").mockResolvedValueOnce({
+      ok: false,
+      data: null,
+      error: { code: 1, message: errorMessage },
+    });
+
+    makeSut({ getRickAndMortyDataSpy });
+
+    const toast = await screen.findByRole("alert");
+
+    await waitFor(() => {
+      expect(toast).toHaveTextContent(errorMessage);
+    });
   });
 });
 
