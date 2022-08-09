@@ -1,6 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { wait } from "@testing-library/user-event/dist/types/utils";
 import { ToastContainer } from "react-toastify";
 
 import { ResponseInterface } from "@/data/protocols";
@@ -191,12 +190,3 @@ describe("<RickAndMortyDataVisualizer />", () => {
     });
   });
 });
-
-/**
- * Requirements:
- * should work with any http method
- */
-
-//Todo:
-// Make first request optional
-// Allow to extend success and failure, (state reducer maybe?)
