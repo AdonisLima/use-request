@@ -89,7 +89,8 @@
         "testing-library/no-await-sync-query": "error",
         "testing-library/no-debugging-utils": "warn",
         "testing-library/no-dom-import": "off",
-        "jest/expect-expect": "off"
+        "jest/expect-expect": "off",
+        "@typescript-eslint/no-explicit-any": "off"
       },
       "env": {
         "jest/globals": true // enable Jest global variables.
