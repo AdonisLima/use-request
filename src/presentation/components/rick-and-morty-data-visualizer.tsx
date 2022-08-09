@@ -17,27 +17,12 @@ export function RickAndMortyDataVisualizer({
     getRickAndMortyData,
     {
       initialPayload: 805,
+
       onSuccess: useCallback(() => {
-        toast("Dados obtidos com sucesso!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        toast("Dados obtidos com sucesso!");
       }, []),
       onFailure: useCallback((error: ErrorInterface) => {
-        toast(error.message, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+        toast(error.message);
       }, []),
     }
   );
@@ -65,7 +50,7 @@ export function RickAndMortyDataVisualizer({
           request(802);
         }}
       >
-        request
+        Request
       </button>
       <h2>List of Ricks</h2>
       <div data-testid={"area-for-ricks-list"}>
