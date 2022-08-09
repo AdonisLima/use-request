@@ -1,4 +1,4 @@
-# React TypeScript template with Vite
+# React use-request
 
 This is a [React](https://reactjs.org) + [TypeScript](https://www.typescriptlang.org/) boilerplate built with [Vite](https://vitejs.dev).
 
