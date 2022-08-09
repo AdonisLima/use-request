@@ -4,13 +4,13 @@ import { ToastContainer } from "react-toastify";
 
 import { ResponseInterface } from "@/data/protocols";
 import { CharacterModel } from "@/domain";
-import { GetRickAndMortyData } from "@/domain/usecases";
-import { GetListOfRicks } from "@/domain/usecases/get-list-of-ricks";
-import { fakeData, listOfFakeRicks } from "@/tests";
+import { GetLorenData } from "@/domain/usecases";
+import { GetListOfLorens } from "@/domain/usecases/get-list-of-lorens";
+import { fakeData, listOfFakeLorens } from "@/tests";
 
-import { RickAndMortyDataVisualizer } from "./rick-and-morty-data-visualizer";
+import { LorenDataVisualizer } from "./loren-data-visualizer";
 
-class RemoteGetRickAndMortyDataSpy implements GetRickAndMortyData {
+class RemoteLorenDataSpy implements GetLorenData {
   characterId!: number;
 
   execute: (characterId: number) => Promise<ResponseInterface<CharacterModel>> =
@@ -27,11 +27,11 @@ class RemoteGetRickAndMortyDataSpy implements GetRickAndMortyData {
     };
 }
 
-class RemoteGetListOfRicks implements GetListOfRicks {
+class RemoteGetListOfLorens implements GetListOfLorens {
   execute: () => Promise<ResponseInterface<CharacterModel[]>> = async () => {
     const response: ResponseInterface<CharacterModel[]> = {
       ok: true,
-      data: listOfFakeRicks,
+      data: listOfFakeLorens,
       error: null,
     };
 
@@ -40,35 +40,34 @@ class RemoteGetListOfRicks implements GetListOfRicks {
 }
 
 interface SutInterface {
-  getRickAndMortyDataSpy?: RemoteGetRickAndMortyDataSpy;
-  getListsOfRicksSpy?: GetListOfRicks;
+  getLorenDataSpy?: RemoteLorenDataSpy;
+  getListsOfLorensSpy?: GetListOfLorens;
 }
 
 function makeSut(params?: SutInterface) {
-  const { getRickAndMortyDataSpy, getListsOfRicksSpy } = params || {};
+  const { getLorenDataSpy, getListsOfLorensSpy } = params || {};
 
-  const parsedGetRickAndMortyDataSpy =
-    getRickAndMortyDataSpy || new RemoteGetRickAndMortyDataSpy();
+  const parsedGetLorenDataSpy = getLorenDataSpy || new RemoteLorenDataSpy();
 
-  const parsedGetListOfRicksSpy =
-    getListsOfRicksSpy || new RemoteGetListOfRicks();
+  const parsedGetListOfLorensSpy =
+    getListsOfLorensSpy || new RemoteGetListOfLorens();
 
   const user = userEvent.setup();
 
   render(
     <>
       <ToastContainer />
-      <RickAndMortyDataVisualizer
-        getRickAndMortyData={parsedGetRickAndMortyDataSpy}
-        getListOfRicks={parsedGetListOfRicksSpy}
-      ></RickAndMortyDataVisualizer>
+      <LorenDataVisualizer
+        getLorenData={parsedGetLorenDataSpy}
+        getListOfLorens={parsedGetListOfLorensSpy}
+      ></LorenDataVisualizer>
     </>
   );
 
-  return { getRickAndMortyDataSpy, user };
+  return { getLorenDataSpy, user };
 }
 
-describe("<RickAndMortyDataVisualizer />", () => {
+describe("<LorenDataVisualizer />", () => {
   test("Should render loading state", async () => {
     makeSut();
 
@@ -82,17 +81,17 @@ describe("<RickAndMortyDataVisualizer />", () => {
   test("Should render an error state", async () => {
     const errorMessage = "UnexpectedError";
 
-    const getRickAndMortyDataSpy = new RemoteGetRickAndMortyDataSpy();
+    const getLorenDataSpy = new RemoteLorenDataSpy();
 
     const executeSpy = jest
-      .spyOn(getRickAndMortyDataSpy, "execute")
+      .spyOn(getLorenDataSpy, "execute")
       .mockResolvedValueOnce({
         ok: false,
         data: null,
         error: { code: 1, message: errorMessage },
       });
 
-    makeSut({ getRickAndMortyDataSpy });
+    makeSut({ getLorenDataSpy });
 
     const errorComponent = await screen.findByText(errorMessage);
 
@@ -103,11 +102,11 @@ describe("<RickAndMortyDataVisualizer />", () => {
   });
 
   test("Should render proper data", async () => {
-    const getRickAndMortyDataSpy = new RemoteGetRickAndMortyDataSpy();
+    const getLorenDataSpy = new RemoteLorenDataSpy();
 
-    const executeSpy = jest.spyOn(getRickAndMortyDataSpy, "execute");
+    const executeSpy = jest.spyOn(getLorenDataSpy, "execute");
 
-    makeSut({ getRickAndMortyDataSpy });
+    makeSut({ getLorenDataSpy });
 
     const stringifiedFakeData = JSON.stringify(fakeData, null);
 
@@ -120,12 +119,12 @@ describe("<RickAndMortyDataVisualizer />", () => {
   });
 
   test("Should ba able to retry request programmatically", async () => {
-    const getRickAndMortyDataSpy = new RemoteGetRickAndMortyDataSpy();
+    const getLorenDataSpy = new RemoteLorenDataSpy();
 
-    const executeSpy = jest.spyOn(getRickAndMortyDataSpy, "execute");
+    const executeSpy = jest.spyOn(getLorenDataSpy, "execute");
 
     const { user } = makeSut({
-      getRickAndMortyDataSpy: getRickAndMortyDataSpy,
+      getLorenDataSpy: getLorenDataSpy,
     });
 
     const requestButton = await screen.findByRole("button", {
@@ -140,18 +139,18 @@ describe("<RickAndMortyDataVisualizer />", () => {
   });
 
   test("Should allow request on page load to be optional", async () => {
-    const listOfRicksSpy = new RemoteGetListOfRicks();
+    const listOfLorensSpy = new RemoteGetListOfLorens();
 
-    const optionalExecuteSpy = jest.spyOn(listOfRicksSpy, "execute");
+    const optionalExecuteSpy = jest.spyOn(listOfLorensSpy, "execute");
 
-    makeSut({ getListsOfRicksSpy: listOfRicksSpy });
+    makeSut({ getListsOfLorensSpy: listOfLorensSpy });
 
-    const getAreaForListOfRicks = await screen.findByTestId(
-      "area-for-ricks-list"
+    const getAreaForListOfLorens = await screen.findByTestId(
+      "area-for-lorens-list"
     );
 
     await waitFor(() => {
-      expect(getAreaForListOfRicks).toHaveTextContent("null");
+      expect(getAreaForListOfLorens).toHaveTextContent("null");
     });
     expect(optionalExecuteSpy).toHaveBeenCalledTimes(0);
   });
@@ -171,17 +170,17 @@ describe("<RickAndMortyDataVisualizer />", () => {
   });
 
   test("Should allow to execute custom behavior on failed request", async () => {
-    const getRickAndMortyDataSpy = new RemoteGetRickAndMortyDataSpy();
+    const getLorenDataSpy = new RemoteLorenDataSpy();
 
     const errorMessage = "Any error message";
 
-    jest.spyOn(getRickAndMortyDataSpy, "execute").mockResolvedValueOnce({
+    jest.spyOn(getLorenDataSpy, "execute").mockResolvedValueOnce({
       ok: false,
       data: null,
       error: { code: 1, message: errorMessage },
     });
 
-    makeSut({ getRickAndMortyDataSpy });
+    makeSut({ getLorenDataSpy });
 
     const toast = await screen.findByRole("alert");
 

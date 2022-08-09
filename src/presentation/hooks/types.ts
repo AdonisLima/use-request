@@ -1,8 +1,4 @@
-import {
-  ErrorInterface,
-  FailureResponse,
-  ResponseInterface,
-} from "@/data/protocols";
+import { ErrorInterface, ResponseInterface } from "@/data/protocols";
 
 export interface StateInterface<UsecaseReturnType> {
   ok: boolean;

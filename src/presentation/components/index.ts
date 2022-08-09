@@ -1,1 +1,1 @@
-export * from "./rick-and-morty-data-visualizer";
+export * from "./loren-data-visualizer";

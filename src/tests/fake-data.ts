@@ -1,16 +1,16 @@
 export const fakeData = {
   id: 802,
-  name: "26 Years Old Morty",
+  name: "26 Years Old Loren",
   status: "Dead",
   species: "Human",
   type: "",
   gender: "Male",
   origin: {
-    name: "Citadel of Ricks",
+    name: "Citadel of Lorens",
     url: "https://rickandmortyapi.com/api/location/3",
   },
   location: {
-    name: "Citadel of Ricks",
+    name: "Citadel of Lorens",
     url: "https://rickandmortyapi.com/api/location/3",
   },
   image: "https://rickandmortyapi.com/api/character/avatar/802.jpeg",
@@ -19,20 +19,20 @@ export const fakeData = {
   created: "2021-11-02T13:12:42.408Z",
 };
 
-export const listOfFakeRicks = [
+export const listOfFakeLorens = [
   {
     id: 802,
-    name: "26 Years Old Morty",
+    name: "26 Years Old Loren",
     status: "Dead",
     species: "Human",
     type: "",
     gender: "Male",
     origin: {
-      name: "Citadel of Ricks",
+      name: "Citadel of Lorens",
       url: "https://rickandmortyapi.com/api/location/3",
     },
     location: {
-      name: "Citadel of Ricks",
+      name: "Citadel of Lorens",
       url: "https://rickandmortyapi.com/api/location/3",
     },
     image: "https://rickandmortyapi.com/api/character/avatar/802.jpeg",
@@ -42,17 +42,17 @@ export const listOfFakeRicks = [
   },
   {
     id: 803,
-    name: "40 Years Old Morty",
+    name: "40 Years Old Loren",
     status: "unknown",
     species: "Human",
     type: "",
     gender: "Male",
     origin: {
-      name: "Citadel of Ricks",
+      name: "Citadel of Lorens",
       url: "https://rickandmortyapi.com/api/location/3",
     },
     location: {
-      name: "Citadel of Ricks",
+      name: "Citadel of Lorens",
       url: "https://rickandmortyapi.com/api/location/3",
     },
     image: "https://rickandmortyapi.com/api/character/avatar/803.jpeg",
@@ -69,7 +69,7 @@ export const listOfFakeRicks = [
     gender: "Male",
     origin: { name: "unknown", url: "" },
     location: {
-      name: "Citadel of Ricks",
+      name: "Citadel of Lorens",
       url: "https://rickandmortyapi.com/api/location/3",
     },
     image: "https://rickandmortyapi.com/api/character/avatar/804.jpeg",
@@ -79,17 +79,17 @@ export const listOfFakeRicks = [
   },
   {
     id: 805,
-    name: "Baby Mouse Skin Morty",
+    name: "Baby Mouse Skin Loren",
     status: "Alive",
     species: "Human",
     type: "",
     gender: "Male",
     origin: {
-      name: "Citadel of Ricks",
+      name: "Citadel of Lorens",
       url: "https://rickandmortyapi.com/api/location/3",
     },
     location: {
-      name: "Citadel of Ricks",
+      name: "Citadel of Lorens",
       url: "https://rickandmortyapi.com/api/location/3",
     },
     image: "https://rickandmortyapi.com/api/character/avatar/805.jpeg",

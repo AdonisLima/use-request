@@ -57,13 +57,13 @@ export function useRequest<UseCaseType extends GenericUsecase>(
   });
 
   const request = useCallback(
-    async (payload: GenericUsecasePayloadType<UseCaseType> | void) => {
+    async (...payload: any[]) => {
       dispatch({ type: ActionTypesEnum.PROMISE_PENDING });
 
       let response;
 
       if (payload) {
-        response = await usecase.execute(payload);
+        response = await usecase.execute(...payload);
       } else {
         response = await usecase.execute();
       }

@@ -1,7 +1,7 @@
-import { GetRickAndMortyData } from "@/domain/usecases";
-import { GetListOfRicks } from "@/domain/usecases/get-list-of-ricks";
+import { GetLorenData } from "@/domain/usecases";
+import { GetListOfLorens } from "@/domain/usecases/get-list-of-lorens";
 
-export interface RickAndMortyDataVisualizer {
-  getRickAndMortyData: GetRickAndMortyData;
-  getListOfRicks: GetListOfRicks;
+export interface LorenDataVisualizer {
+  getLorenData: GetLorenData;
+  getListOfLorens: GetListOfLorens;
 }

@@ -1,9 +1,9 @@
 import { CharacterModel } from "@/domain";
-import { GetRickAndMortyData } from "@/domain/usecases";
+import { GetLorenData } from "@/domain/usecases";
 
 import { ResponseInterface } from "../protocols";
 
-export class RemoteGetRickAndMortyData implements GetRickAndMortyData {
+export class RemoteGetLorenData implements GetLorenData {
   execute: (characterId: number) => Promise<ResponseInterface<CharacterModel>> =
     async characterId => {
       const apiResponse = await fetch(
@@ -13,7 +13,7 @@ export class RemoteGetRickAndMortyData implements GetRickAndMortyData {
       const response: ResponseInterface<CharacterModel> = {
         ok: true,
         data: await apiResponse.json(),
-        error: false,
+        error: null,
       };
 
       return response;

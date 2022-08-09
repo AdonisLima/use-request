@@ -1,1 +1,1 @@
-export * from "./get-rick-and-morty-data";
+export * from "./get-loren-data";
